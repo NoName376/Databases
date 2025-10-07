@@ -215,6 +215,112 @@ WHERE p.budget > 50000
 
 
 
+-- DML Challenge
+CREATE TABLE menu_items (
+    item_id SERIAL PRIMARY KEY,
+    item_name VARCHAR(50),
+    category VARCHAR(50),
+    base_price INT,
+    is_available BOOLEAN,
+    prep_time_minutes TIMESTAMP
+);
+
+CREATE TABLE customer_order (
+    order_id SERIAL PRIMARY KEY,
+    customer_name VARCHAR(50),
+    order_date TIMESTAMP,
+    total_amount INT,
+    payment_status VARCHAR(50),
+    table_number INT
+);
+
+CREATE TABLE order_details(
+    detail_id SERIAL PRIMARY KEY,
+    order_id INT,
+    item_id INT,
+    quantity INT,
+    special_instructions VARCHAR(50)
+);
+
+
+-- A
+INSERT INTO menu_items (item_name, category, base_price, is_available, prep_time_minutes)
+VALUES ('Chief Special Burger', 'Main Course', ROUND(12*1.25)::int, true, 20);
+
+INSERT INTO customer_order (customer_name, order_date, total_amount, payment_status, table_number)
+VALUES
+  ('John Smith',  CURRENT_DATE, 45.50, 'Paid',     5),
+  ('Mary Johnson', CURRENT_DATE, 32.00, 'Pending', 8),
+  ('Bob Wilson',   CURRENT_DATE, 28.75, 'Paid',    3);
+
+INSERT INTO customer_order (customer_name, order_date, payment_status, table_number)
+VALUES ('Walk-in Customer', CURRENT_DATE, DEFAULT, NULL);
+
+-- B
+UPDATE menu_items
+SET base_price = ROUND(base_price * 1.08, 2)
+WHERE category = 'Appetizers';
+
+
+UPDATE menu_items
+SET category = CASE
+  WHEN base_price > 20 THEN 'Premium'
+  WHEN base_price BETWEEN 10 AND 20 THEN 'Standard'
+  ELSE 'Budget'
+END;
+
+
+
+UPDATE customer_order
+SET
+  total_amount = total_amount * 0.90,
+  payment_status = 'Discounted'
+WHERE payment_status = 'Pending';
+
+
+UPDATE menu_items mi
+SET is_available = FALSE
+WHERE mi.item_id IN (
+  SELECT i.item_id
+  FROM order_details i
+  WHERE i.quantity > 10
+);
+
+
+
+
+-- C
+DELETE FROM menu_items
+WHERE is_available = FALSE
+  AND base_price < 5.00;
+
+
+DELETE FROM customer_order
+WHERE order_date < DATE '2024-01-01'
+  AND payment_status = 'Cancelled';
+
+
+DELETE FROM order_details
+WHERE order_id NOT IN (SELECT order_id FROM customer_order);
+
+
+
+-- D
+UPDATE menu_items
+SET prep_time_minutes = NULL
+WHERE category IS NULL
+RETURNING item_id, item_name;
+
+
+INSERT INTO customer_order (customer_name, order_date, payment_status, table_number, total_amount)
+VALUES ('Customer', CURRENT_DATE, DEFAULT, NULL, NULL)
+RETURNING order_id, *;
+
+
+
+
+
+
 
 
 
