@@ -304,3 +304,110 @@ SELECT
   ROUND(LEAST(AVG(e1.salary),  MAX(e1.salary)), 2)  AS demo_least
 FROM employees e1
 GROUP BY e1.department;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- In class work
+CREATE TABLE accounts_table(
+    account_id SERIAL PRIMARY KEY,
+    account_holder VARCHAR(50),
+    account_type VARCHAR(50),
+    balance INTEGER,
+    opening_date DATE,
+    branch_code VARCHAR(50),
+    status VARCHAR(50)
+);
+
+CREATE TABLE transaction_table (
+  transaction_id SERIAL PRIMARY KEY,
+  account_id INTEGER,
+  transaction_date DATE,
+  amount INTEGER,
+  transaction_type VARCHAR(50),
+  description VARCHAR(500)
+);
+
+CREATE TABLE branches_table(
+    branch_code SERIAL PRIMARY KEY,
+    branch_name VARCHAR(50),
+    city VARCHAR(50),
+    manager_name VARCHAR(50),
+    employee_count INTEGER
+);
+
+
+-- A1
+SELECT UPPER(account_holder) AS holder_name
+FROM accounts_table;
+
+SELECT SUBSTRING(branch_code, FROM 1 FOR 5)
+FROM branches_table;
+
+SELECT (account_type || ' - ' || account_type)
+FROM accounts_table;
+
+SELECT
+    balance,
+    CASE
+        WHEN balance > 100000 THEN 'High value'
+        WHEN balance BETWEEN 10000 and 100000 THEN 'Medium value'
+        ELSE 'Low value'
+    END AS
+FROM accounts_table;
+
+
+SELECT account_holder
+FROM accounts_table
+WHERE account_holder LIKE '%a%';
+
+
+
+
+
+
+-- B
+SELECT *
+FROM transaction_table
+WHERE (amount BETWEEN 500 AND 5000) AND (transaction_type = 'Withdrawal');
+
+
+SELECT ROUND(balance * 1.025)
+FROM accounts_table;
+
+SELECT employee_count, city
+FROM branches_table
+WHERE employee_count > 10 AND city = 'New York';
+
+SELECT COALESCE(description, '')
+FROM transaction_table
+WHERE description == '';
+
+
+
+
+
+
+/*
+Part C: Aggregation
+Task C1: Calculate the total transaction amount for each account_id.
+Task C2: Count how many accounts exist in each branch. Show only branches with more than 5
+accounts.
+Task C3: Find the average balance for each account_type.
+Task C4: Get the sum of all transaction amounts where transaction_type is 'Deposit', grouped by
+transaction_date.
+Part D: Subqueries
+Task D1: Find all accounts that have at least one transaction. Use EXISTS.
+Task D2: Find accounts whose balance is greater than ANY account at branch 'BR001'.
+*/
