@@ -328,3 +328,95 @@ VALUES (2, 99.00, 'waiting');
 
 INSERT INTO orders_ecommerce (customer_id, total_amount, status)
 VALUES (999, 100.00, 'pending');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- In class work
+
+
+CREATE TABLE restaurant_tables(
+    table_id INTEGER PRIMARY KEY,
+    table_number INTEGER NOT NULL UNIQUE,
+    seating_capacity INTEGER NOT NULL CHECK (  seating_capacity >= 2 and seating_capacity <= 12 ),
+    location VARCHAR(50) NOT NULL CHECK ( location IN ('indoor', 'outdoor', 'patio', 'private') ),
+    is_available BOOLEAN NOT NULL DEFAULT true
+);
+
+INSERT INTO restaurant_tables
+VALUES (0,1, 15, 'private'),
+(1, 1, 7, 'rooftop');
+
+
+
+
+
+-- TASK 2
+CREATE TABLE menu_item (
+    item_id INTEGER SERIAL PRIMARY KEY,
+    item_name TEXT NOT NULL UNIQUE,
+    category TEXT NOT NULL CHECK ( category IN ('appetizer', 'main', 'dessert', 'beverage') ),
+    base_price NUMERIC(8, 2)  NOT NULL CHECK ( base_price > 0 AND base_price < 200 ),
+    special_price NUMERIC(8, 2) CHECK ( special_price < base_price ),
+    is_available BOOLEAN NOT NULL DEFAULT true,
+    preparation_time INTEGER CHECK ( preparation_time >= 5 AND preparation_time <= 120 ),
+    calories INTEGER CHECK ( preparation_time >= 0 AND preparation_time <= 5000 )
+);
+
+INSERT INTO menu_item
+VALUES
+    (0, 'AAA', 'main', 32, 16, true, 6, 1252),
+    (0, 'dgge', 'appetizer', 22, 30, true, 6, 1252),
+    (1, 'drsf', 'dessert', 12, 16, true, 6, 1252),
+    (2, 'dsf', 'beverage', 2, 16, true, 6, 1252),
+    (3, 'AAA', 'main', 7, 16, true, 6, 1252);
+
+
+-- TASK 3
+
+CREATE TABLE customers(
+    customer_id INTEGER PRIMARY KEY,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL,
+    email TEXT UNIQUE ,
+    phone TEXT NOT NULL ,
+    loyalty_points INTEGER NOT NULL DEFAULT 0 CHECK ( loyalty_points >= 0 ),
+    registration_date DATE NOT NULL  DEFAULT CURRENT_DATE,
+    date_of_birth DATE
+);
+
+INSERT INTO customers
+VALUES (0, 'f', 'g', CURRENT_DATE, CURRENT_DATE),
+(1, 'f', 'g', CURRENT_DATE, CURRENT_DATE),
+(2, 'f', 'g', CURRENT_DATE, CURRENT_DATE);
+
+
+-- TASK 4
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY ,
+    table_id NOT NULL REFERENCES restaurant_tables,
+    customer_id INTEGER REFERENCES customers ON DELETE SET NULL ,
+    order_datetime TIMESTAMP NOT NULL DEFAULT NOW(),
+    num_guest INTEGER NOT NULL CHECK ( num_guest >= 1 AND num_guest <= 20 ),
+    status TEXT NOT NULL DEFAULT 'pending' CHECK ( status IN ( 'pending', 'preparing',
+'ready', 'served', 'paid', 'cancelled') ),
+    subtotal NUMERIC(8, 2) NOT NULL DEFAULT 0 CHECK ( subtotal >= 0 ),
+    tax NUMERIC(8, 2) NOT NULL DEFAULT 0 CHECK ( tax >= 0 ),
+    tip NUMERIC(8, 2) DEFAULT 0 CHECK ( tip >= 0 ),
+    total_amount NUMERIC(8, 2) NOT NULL DEFAULT 0 CHECK ( total_amount >= 0 )
+);
