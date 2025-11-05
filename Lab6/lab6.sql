@@ -107,6 +107,11 @@ SELECT
     e.dept_id AS emp_dept,
     d.dept_id AS dept_dept,
     d.dept_name
+FROM employees e LEFT JOIN departments d USING (dept_id);SELECT
+    e.emp_name,
+    e.dept_id AS emp_dept,
+    d.dept_id AS dept_dept,
+    d.dept_name
 FROM employees e LEFT JOIN departments d USING (dept_id);
 
 -- Task 4.3
