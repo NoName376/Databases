@@ -1,4 +1,9 @@
+DROP TABLE IF EXISTS customers CASCADE;
+DROP TABLE IF EXISTS accounts CASCADE;
+DROP TABLE IF EXISTS transactions CASCADE;
+DROP TABLE IF EXISTS exchange_rates CASCADE;
 DROP TABLE IF EXISTS audit_log CASCADE;
+
 DROP TYPE IF EXISTS transaction_status;
 DROP TYPE IF EXISTS transaction_type;
 
