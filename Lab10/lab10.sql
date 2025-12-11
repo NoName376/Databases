@@ -1,15 +1,15 @@
 -- 3.1 Setup
 CREATE TABLE accounts (
-    id      SERIAL PRIMARY KEY,
-    name    VARCHAR(100) NOT NULL,
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
     balance DECIMAL(10, 2) DEFAULT 0.00
 );
 
 CREATE TABLE products (
-    id      SERIAL PRIMARY KEY,
-    shop    VARCHAR(100) NOT NULL,
+    id SERIAL PRIMARY KEY,
+    shop VARCHAR(100) NOT NULL,
     product VARCHAR(100) NOT NULL,
-    price   DECIMAL(10, 2) NOT NULL
+    price DECIMAL(10, 2) NOT NULL
 );
 
 -- Insert test data
